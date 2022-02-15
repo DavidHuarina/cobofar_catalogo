@@ -2,7 +2,7 @@
 if(!isset($_COOKIE["gl_usuario"])){
    ?><script type="text/javascript">window.location.href='login.html';</script><?php
 }
-
+$gl_usuario=$_COOKIE["gl_usuario"];
 require "conexionmysqli2.inc";
 ?>
 <!DOCTYPE html>
@@ -215,8 +215,14 @@ if($sql2==""){
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li><a href="index.php">Inicio</a></li>
-						<li class="active"><a href="product.php">Productos y Precios</a></li>
+						<li class="active"><a href="index.php">Inicio</a></li>
+						<?php 
+						if($gl_usuario==-1){ ?>
+							<li><a href="product.php">Productos y Precios</a></li>
+						<?php
+							}
+						?>
+						<li><a href="boletas/boletas_print.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
 					</ul>
 					<!-- /NAV -->
 				</div>
@@ -224,6 +230,7 @@ if($sql2==""){
 			</div>
 			<!-- /container -->
 		</nav>
+
 		<!-- /NAVIGATION -->
 
 	<!-- SECTION -->

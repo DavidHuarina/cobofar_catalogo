@@ -3,6 +3,8 @@ if(!isset($_COOKIE["gl_usuario"])){
    ?><script type="text/javascript">window.location.href='login.html';</script><?php
 }
 
+$gl_usuario=$_COOKIE["gl_usuario"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,7 +119,13 @@ if(!isset($_COOKIE["gl_usuario"])){
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
 						<li class="active"><a href="index.php">Inicio</a></li>
-						<li><a href="product.php">Productos y Precios</a></li>
+						<?php 
+						if($gl_usuario==-1){ ?>
+							<li><a href="product.php">Productos y Precios</a></li>
+						<?php
+							}
+						?>
+						<li><a href="boletas/boletas_print.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
 					</ul>
 					<!-- /NAV -->
 				</div>
@@ -146,9 +154,10 @@ if(!isset($_COOKIE["gl_usuario"])){
 					<div class="col-md-12">
 						<div class="row">
 							<div class="products-tabs">
-								<!-- tab -->
-								<p>Está aplicacion interna está diseñada para proporcionar información acerca de los productos en el catálogo de la empresa FARMACIAS BOLIVIA.</p>
-								<!-- /tab -->
+								
+								<!-- <p>Está aplicacion interna está diseñada para proporcionar información acerca de los productos en el catálogo de la empresa FARMACIAS BOLIVIA.</p> -->
+								<p>Bienvenidos a la intranet de FARMACIAS BOLIVIA!.</p>
+								
 							</div>
 						</div>
 					</div>

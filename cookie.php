@@ -4,7 +4,8 @@ $usuario_adm = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
 $contrasena = str_replace("'", "''", $contrasena);
 
-$password2 = md5($contrasena);
+// $password2 = md5($contrasena);
+$password2 = $contrasena;
 $sql = "
     SELECT f.cod_cargo, f.cod_ciudad,u.codigo_funcionario
     FROM funcionarios f, usuarios_sistema u
@@ -27,6 +28,9 @@ if ($num_filas != 0) {
 	
 
 	setcookie("gl_nombre_usuario",$nombreUser,time()+3600*24*30, '/');
+
+	
+
    header("location:index.php");
 }else{
 	?><script type="text/javascript">window.location.href='login.html'</script><?php
