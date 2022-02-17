@@ -38,7 +38,7 @@
   }
 
 
-    function descargarPDFBoleta($nom,$html){
+    function descargarPDFBoleta2($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
     // Cargamos DOMPDF
@@ -51,6 +51,20 @@
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDF_planillas.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
+   function descargarPDFBoleta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+      $dompdf = new DOMPDF();
+      // $dompdf->set_paper("letter", "portrait");
+      $dompdf->set_paper("A4", "portrait");
+      $dompdf->load_html($html);    
+      $dompdf->render();
+      $pdf = $dompdf->output();
+      file_put_contents("../blts/boletas_temp/".$nom.".pdf", $pdf);
   }
 
 

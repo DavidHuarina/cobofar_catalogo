@@ -1,27 +1,47 @@
+<link rel="shortcut icon" href="../img/icon_farma.ico" type="image/x-icon">
+        <!-- Google font -->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="../css/bootstrap.min.css"/>
+        <!-- Slick -->
+        <link type="text/css" rel="stylesheet" href="../css/slick.css"/>
+        <link type="text/css" rel="stylesheet" href="../css/slick-theme.css"/>
+        <!-- nouislider -->
+        <link type="text/css" rel="stylesheet" href="../css/nouislider.min.css"/>
+        <!-- Font Awesome Icon -->
+        <link rel="stylesheet" href="../css/font-awesome.min.css">
+        <!-- Custom stlylesheet -->
+        <link type="text/css" rel="stylesheet" href="../css/style.css"/>
 <?php
+
+//RECIBIMOS LAS VARIABLES
+if(!isset($_GET["cod_personal"])){
+   ?><script type="text/javascript">window.location.href='../login.html';</script><?php
+}
+
+$codigo_string = $_GET["cod_planilla"];//
+$cod_personal = $_GET["cod_personal"];//
 
 
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
-
 require '../assets/phpqrcode/qrlib.php';
 $dbh = new Conexion();
 
-//RECIBIMOS LAS VARIABLES
-$codigo_string = $_POST["cod_planilla"];//
-$cod_personal = $_POST["cod_personal"];//
+$fileName="";
+
+
 
 // echo $codigo_string;
 
 $codigo_array=explode(',', $codigo_string);
-
 $cod_planilla=$codigo_array[0];
 $cod_mes = $codigo_array[1];
 $cod_gestion = $codigo_array[2];
 
 // if($cod_personal==-1000){
-// 	$cod_uo = $_POST["cod_uo"];
+// 	$cod_uo = $_GET["cod_uo"];
 // 	if($cod_uo==-1000){
 // 		$sql_add="  ";
 // 	}else{
@@ -69,9 +89,23 @@ $html.='<body>'.
       '}'.
     '</script>';
     // $index_planilla=1;
+    $codigo_generado="";
+    header("Content-type:application/pdf");
+
+// It will be called downloaded.pdf
+    $nombre_archivo_x=$cod_personal."_".$mes."".$gestion;
+header("Content-Disposition:attachment;filename=$nombre_archivo_x.pdf");
+
 while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-	// $cod_personal=$result['codigo'];
+	//generando Clave unico 
+	$nuevo_numero=$cod_personal+$cod_planilla+$cod_mes+$cod_gestion;
+	$cantidad_digitos=strlen($nuevo_numero);
+	$numero_adicional=$nuevo_numero+100+$cantidad_digitos;
+	$numero_exa=dechex($numero_adicional);//convertimos de decimal a hexadecimal 
+	// echo $exa."_";
+	// echo hexdec($exa);//se convierte hexa a decimal
+	$codigo_generado=$cod_personal.".".$cod_planilla.".".$cod_mes.".".$cod_gestion.".".$numero_exa;
 
 	$haber_basico_dias=$result['haber_basico2'];
 	$bono_antiguedad=$result['bono_antiguedad'];
@@ -108,6 +142,9 @@ while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$RC_IVA+$Anticipos+$Prestamos+$Inventario+$Vencidos+$Atrasos+$Faltantes_Caja+$Otros_Descuentos+$Aporte_Sindical;
 
 	$liquido_pagable=$suma_ingresos-$suma_egresos;
+
+
+
 	if($cod_personal==-1000){
 		require 'boletas_html_aux.php';
 		$html.='<hr>';
@@ -126,7 +163,27 @@ $stmt=null;
 $dbh=null;
 
 // echo $html;
-descargarPDFBoleta("COBOFAR - ",$html);
 
+descargarPDFBoleta($nombre_archivo_x,$html);
+
+// The PDF source is in original.pdf
+readfile("../blts/boletas_temp/$nombre_archivo_x.pdf");
+
+unlink($fileName);
+unlink("../blts/boletas_temp/$nombre_archivo_x.pdf");
 ?>
+
+<!-- <script type ="text/javascript" >
+	  	
+	  		 
+        
+        var link = "http://186.121.247.102:8888/cobofar_catalogo/boletas/boletas_temp/<?=$nombre_archivo_x?>.pdf";
+
+        //alert(link);
+        
+  			 window.open("http://drive.google.com/viewerng/viewer?embedded=true&url="+link);
+    
+
+	
+</script> -->
 

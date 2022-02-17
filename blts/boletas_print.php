@@ -1,6 +1,6 @@
 <?php
 if(!isset($_COOKIE["gl_usuario"])){
-   ?><script type="text/javascript">window.location.href='login.html';</script><?php
+   ?><script type="text/javascript">window.location.href='../login.html';</script><?php
 }
 $gl_usuario=$_COOKIE["gl_usuario"];
 // require "conexion.php";
@@ -39,7 +39,6 @@ $gl_usuario=$_COOKIE["gl_usuario"];
     $dbh = new Conexion();
 
     $cod_personal=$_GET["cod_personal"];
-
     $sql="SELECT p.paterno,p.materno,p.primer_nombre,(select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo from personal p where p.codigo=$cod_personal";
     $stmtpersonal = $dbh->query($sql);
     $nombre="NO ENCONTRADO.";
@@ -49,7 +48,6 @@ $gl_usuario=$_COOKIE["gl_usuario"];
         $cargo = $rowpersonal["cargo"];
     }
     ?>
-
     <!-- HEADER -->
     <header>
         <!-- TOP HEADER -->
@@ -87,11 +85,11 @@ $gl_usuario=$_COOKIE["gl_usuario"];
                                     <span><?=$_COOKIE["gl_nombre_usuario"]?></span>
                                     <div class="qty"></div>
                                 </a>
-                                <div class="cart-dropdown">
+                                <!-- <div class="cart-dropdown">
                                     <div class="cart-btns">
                                         <a href="../salir.php">Salir  <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- /Cart -->
 
@@ -129,7 +127,8 @@ $gl_usuario=$_COOKIE["gl_usuario"];
                     <?php
                         }
                     ?>
-                    <li><a href="../boletas/boletas_print.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
+                    <li><a href="../blts/boletas_print.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
+                    <li><a href="../salir.php">Cerrar Sesión<i class="fa fa-arrow-circle-right"></i></a></li>
                 </ul>
                 <!-- /NAV -->
             </div>
@@ -139,15 +138,13 @@ $gl_usuario=$_COOKIE["gl_usuario"];
     </nav>
 
     <!-- /NAVIGATION -->
-
     <div class="section">
         <!-- container -->
         <div class="container">
             <!-- row -->
             <div class="row">
-                    
                     <div class="col-md-5">
-                        <form id="form1" class="form-horizontal" action="boletas_html.php" method="POST" target="_blank" >
+                        <form id="form1" class="form-horizontal" action="boletas_html.php" method="GET"  target="_blank">
                         <div class="card">
                             <div class="card-header  card-header-text">
                                 <div class="card-text">

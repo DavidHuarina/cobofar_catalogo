@@ -179,11 +179,11 @@ if($sql2==""){
 										<span><?=$_COOKIE["gl_nombre_usuario"]?></span>
 										<div class="qty"></div>
 									</a>
-									<div class="cart-dropdown">
+									<!-- <div class="cart-dropdown">
 										<div class="cart-btns">
 											<a href="salir.php">Salir  <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
-									</div>
+									</div> -->
 								</div>
 								<!-- /Cart -->
 
@@ -222,7 +222,8 @@ if($sql2==""){
 						<?php
 							}
 						?>
-						<li><a href="boletas/boletas_print.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
+						<li><a href="boletas/blts.php?cod_personal=<?=$gl_usuario?>">Boleta de Pagos</a></li>
+						<li><a href="salir.php">Cerrar Sesión<i class="fa fa-arrow-circle-right"></i></a></li>
 					</ul>
 					<!-- /NAV -->
 				</div>
