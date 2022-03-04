@@ -3,8 +3,8 @@ set_time_limit(0);
 error_reporting(0);
 
 
-// $enlaceCon=mysqli_connect("p:127.0.0.1","root","","farmaciasventas");
-$enlaceCon=mysqli_connect("p:10.10.1.11","isullcamani","B0l1v14.@1202**","farmaciasventas");
+ $enlaceCon=mysqli_connect("p:127.0.0.1","root","","farmaciasventas16102021");
+//$enlaceCon=mysqli_connect("p:10.10.1.11","isullcamani","B0l1v14.@1202**","farmaciasventas");
 
 if (mysqli_connect_errno())
 {
