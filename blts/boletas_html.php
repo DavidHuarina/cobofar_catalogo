@@ -31,8 +31,6 @@ $dbh = new Conexion();
 
 $fileName="";
 
-
-
 // echo $codigo_string;
 
 $codigo_array=explode(',', $codigo_string);
@@ -144,7 +142,6 @@ while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$liquido_pagable=$suma_ingresos-$suma_egresos;
 
 
-
 	if($cod_personal==-1000){
 		require 'boletas_html_aux.php';
 		$html.='<hr>';
@@ -173,17 +170,5 @@ unlink($fileName);
 unlink("../blts/boletas_temp/$nombre_archivo_x.pdf");
 ?>
 
-<!-- <script type ="text/javascript" >
-	  	
-	  		 
-        
-        var link = "http://186.121.247.102:8888/cobofar_catalogo/boletas/boletas_temp/<?=$nombre_archivo_x?>.pdf";
 
-        //alert(link);
-        
-  			 window.open("http://drive.google.com/viewerng/viewer?embedded=true&url="+link);
-    
-
-	
-</script> -->
 
