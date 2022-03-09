@@ -3,6 +3,13 @@ if(!isset($_COOKIE["gl_usuario"])){
    ?><script type="text/javascript">window.location.href='login.html';</script><?php
 }
 $gl_usuario=$_COOKIE["gl_usuario"];
+
+$gl_cod_ciudad=1;
+if(isset($_COOKIE["gl_cod_ciudad"])){
+	$gl_cod_ciudad=$_COOKIE["gl_cod_ciudad"];	
+	
+}
+
 require "conexionmysqli2.inc";
 ?>
 <!DOCTYPE html>
@@ -47,6 +54,9 @@ require "conexionmysqli2.inc";
 	}
 	.badge-precio{
 		position: absolute;background: #32AE9D;color:white;border: 1px solid white; border-radius: 5px;font-size: 16px;padding-right: 2px;padding-top: 2px;bottom:20px;right: 10px;height: 30px;text-align: center;padding-left: 3px;
+	}
+	.badge-carro-normal{
+		position: absolute;background: #1863C2;color:white;border: 1px solid white; border-radius: 50%;font-size: 12px;padding-right: 2px;padding-top: 10px;top:0px;left: 0px;font-weight: bold;width:60px;height: 60px;text-align: center;
 	}
 
 </style>
@@ -113,6 +123,37 @@ if($sql2==""){
 			$("#precio_total_prod"+prod).html("T: "+(preunit*cantidad).toFixed(2)+" Bs.");
 		}
 	}
+	function mostrarSaldosProductos(cod_material,nombre_prod){
+		$("#nombre_buscando_producto").html("<b>"+nombre_prod+"</b>");
+		$("#datos_body_load").html($("#cargando_datos").html());
+		$("#nombre_producto").html(nombre_prod);
+		var parametros={"cod_material":cod_material};
+		$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_encontrar_productos.php",
+        data: parametros,
+        success:  function (resp) {         
+        	$("#datos_body_load").html("");
+        	$("#nombre_buscando_producto").html("");
+        	$("#modalProductosCercanos").modal("show");
+        	$("#tabla_datos").html(resp);   
+        }
+    	});	
+	}
+
+	$(document).ready(function(){
+ $("#busqueda_sucursal").keyup(function(){
+ _this = this;
+ // Show only matching TR, hide rest of them
+ $.each($("#tabla_sucursal tbody tr"), function() {
+ if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+ $(this).hide();
+ else
+ $(this).show();
+ });
+ });
+});
 </script>
 
 		<!-- HEADER -->
@@ -217,7 +258,7 @@ if($sql2==""){
 					<ul class="main-nav nav navbar-nav">
 						<li class="active"><a href="index.php">Inicio</a></li>
 						<?php 
-						if($gl_usuario==-1){ ?>
+						if($gl_cod_ciudad==-1){ ?>
 							<li><a href="product.php">Productos y Precios</a></li>
 						<?php
 							}
@@ -262,16 +303,17 @@ if($sql2==""){
 			$precio2=number_format((($precioOrigen*100)/97),2,'.',',');
 			$precio=number_format($precioOrigen,2,'.',',');
 			$precioOrigen=number_format($precioOrigen,2,'.','');
-
 			
 										?>
 							   <!-- product widget -->
 							   <input type="hidden" id="precio_unidad_prod<?=$codMaterial?>" value='<?=$precioOrigen?>'>
 								<div class="product-widget">
-									<div class="product-img">
-										<img src="./img/card.png" alt="">
-										<div class='badge-carro' id='cantidad_prod<?=$codMaterial?>'>1</div>
-									</div>
+									<a href="#" onclick="mostrarSaldosProductos(<?=$codMaterial?>,'<?=$nombreProd?>'); return false;">
+										<div class="product-img">										
+												<img src="./img/card.png" alt="">
+												<div class='badge-carro-normal' id='cantidad_prod<?=$codMaterial?>'>Ver Stock</div>										
+										</div>
+									</a>
 									<div class="product-body">
 										<p class="product-category"><?=$proveedor?></p>
 										<h3 class="product-name"><a href="#"><?=$nombreProd?></a></h3>
@@ -302,85 +344,8 @@ if($sql2==""){
 		</div>
 		<!-- /SECTION -->
 
-		<!-- SECTION -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-
-					<!-- section title -->
-					<div class="col-md-12">
-						<div class="section-title">
-							<h3 class="title">Productos</h3>
-						</div>
-					</div>
-					<!-- /section title -->
-
-					<!-- Products tab & slick -->
-					<div class="col-md-12">
-						<div class="row">
-							<div class="products-tabs">
-								<!-- tab -->
-								<div id="tab1" class="tab-pane active">
-									<div class="products-slick" data-nav="#slick-nav-1">
-<?php
 
 
-	
-	$resp=mysqli_query($enlaceCon,$sql);
-	while($dat=mysqli_fetch_array($resp))
-	{
-		$nombreProd=$dat['descripcion_material'];
-		$proveedor=$dat['proveedor'];
-		$precio=$dat['precio'];
-		if($precio>0){
-			$precio2=number_format((($precio*100)/97),2,'.',',');
-			$precio=number_format($precio,2,'.',',');			
-										?><!-- product -->
-										<div class="product">
-											<div class="product-img">
-												<img src="./img/card.png" alt="">
-												<div class="product-label">
-													<span class="new">Prod</span>
-												</div>
-											</div>
-											<div class="product-body">
-												<p class="product-category"><?=$proveedor?></p>
-												<h3 class="product-name"><a href="#"><?=$nombreProd?></a></h3>
-												<h4 class="product-price">Bs <?=$precio?> <del class="product-old-price">Bs <?=$precio2?></del></h4>
-												<div class="product-rating">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-											</div>
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> agregar</button>
-											</div>
-										</div>
-										<!-- /product --><?php
-
-		}
-	}
-	?>
-										
-									</div>
-									<div id="slick-nav-1" class="products-slick-nav"></div>
-								</div>
-								<!-- /tab -->
-							</div>
-						</div>
-					</div>
-					<!-- Products tab & slick -->
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /SECTION -->
 
 
 	
@@ -450,6 +415,52 @@ if($sql2==""){
 		<script src="js/nouislider.min.js"></script>
 		<script src="js/jquery.zoom.min.js"></script>
 		<script src="js/main.js"></script>
+
+<div id="datos_body_load"></div>
+<div id="cargando_datos" style="display: none;">
+<div  style="z-index: 9999;position: fixed;width: 100%;top:0;background: #fff;height: 100vh;color:#9B1893;padding: 50px;">
+	<center>		
+	<br><br>	
+	<p style='font-size: 30px;'><b>OBTENIENDO STOCK</b></p>
+	<p style='font-size: 20px;color:#1863C2' id='nombre_buscando_producto'></p>
+	<p style='font-size: 15px;'>Espere un momento por favor...</p>
+	</center>
+</div>
+</div>
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalProductosCercanos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-primary card-header-icon">
+                  <center><h4 class="card-title text-primary font-weight-bold">Stock de Productos en Sucursales</h4></center>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    X
+                  </button>
+                </div>
+                <div class="card-body">
+                	<center><h2 id="nombre_producto" style="color:#C70039"></h2></center>
+                	<div class="form-group">
+												<!--  <input type="text" class="form-control pull-right" style="width:20%" id="busqueda_sucursal" placeholder="Buscar Sucursal"> -->
+									</div>
+						<br>
+                  <table class="table table-sm table-bordered" id='tabla_sucursal'>
+                    <thead>
+                      <tr style='background: #ADADAD;color:#000;'>
+                      <th>Sucursal</th>                      
+                      <th>Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla_datos">
+                      
+                    </tbody>
+                  </table>
+                  <br><br>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
 
 	</body>
 </html>

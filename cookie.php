@@ -19,6 +19,8 @@ if ($num_filas != 0) {
     $usuario = $dat[2];
 
     setcookie("gl_usuario", $usuario,time()+3600*24*30, '/');
+
+    setcookie("gl_cod_ciudad", $cod_ciudad,time()+3600*24*30, '/');
     
 
 	//sacamos el nombre del usuario

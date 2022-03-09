@@ -4,6 +4,11 @@ if(!isset($_COOKIE["gl_usuario"])){
 }
 $gl_usuario=$_COOKIE["gl_usuario"];
 // require "conexion.php";
+$gl_cod_ciudad=1;
+if(isset($_COOKIE["gl_cod_ciudad"])){
+    $gl_cod_ciudad=$_COOKIE["gl_cod_ciudad"];   
+    
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,7 +127,7 @@ $gl_usuario=$_COOKIE["gl_usuario"];
                 <ul class="main-nav nav navbar-nav">
                     <li class="active"><a href="../index.php">Inicio</a></li>
                     <?php 
-                    if($gl_usuario==-1){ ?>
+                    if($gl_cod_ciudad==-1){ ?>
                         <li><a href="../product.php">Productos y Precios</a></li>
                     <?php
                         }
